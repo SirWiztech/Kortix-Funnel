@@ -15,7 +15,8 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
     if ($a==='settings') { $s=load_settings(); foreach(array_keys($s) as $k) $s[$k]=$f($k); save_settings($s); $msg='Page details saved.'; }
     if ($a==='logout') { session_destroy(); header('Location: admin.php'); exit; }
     if ($a==='add' || $a==='update') {
-      $row = ['title'=>$f('title'),'tag'=>preg_replace('/[^A-Za-z0-9]/','',$f('tag')) ?: 'Cohort','desc'=>$f('desc'),'url'=>$f('url'),'icon'=>$f('icon') ?: '</>','active'=>isset($_POST['active'])];
+      $steps = array_slice(array_values(array_filter(array_map(fn($s)=>mb_substr(trim($s),0,160), explode("\n",(string)($_POST['steps'] ?? ''))), fn($s)=>$s!=='')), 0, 6);
+      $row = ['title'=>$f('title'),'tag'=>preg_replace('/[^A-Za-z0-9]/','',$f('tag')) ?: 'Cohort','desc'=>$f('desc'),'url'=>$f('url'),'icon'=>$f('icon') ?: '</>','cta'=>mb_substr($f('cta'),0,50),'steps'=>$steps,'active'=>isset($_POST['active'])];
       if (!$row['title'] || !valid_url($row['url'])) $err='Add a title and a valid http(s) link.';
       elseif ($a==='add') { $links[] = $row + ['id'=>bin2hex(random_bytes(4)),'clicks'=>0]; save_links($links); $msg='Cohort added.'; }
       else foreach ($links as &$l) if ($l['id']===$f('id')) { $l = $row + ['id'=>$l['id'],'clicks'=>$l['clicks'] ?? 0]; save_links($links); $msg='Changes saved.'; }
@@ -35,6 +36,8 @@ function fields($l=[]){ ?>
     <div><label>Funnel tag (one word, shown as &lt;Tag/&gt;)</label><input name="tag" value="<?=e($l['tag']??'')?>"></div>
     <div class="full"><label>Short description</label><textarea name="desc"><?=e($l['desc']??'')?></textarea></div>
     <div class="full"><label>Destination link (WhatsApp or any URL)</label><input name="url" type="url" required value="<?=e($l['url']??'')?>"></div>
+    <div class="full"><label>Button text (what the call-to-action says)</label><input name="cta" maxlength="50" value="<?=e($l['cta']??'')?>" placeholder="Auto (Join the WhatsApp group / Visit Website) — leave empty to use the default"></div>
+    <div class="full"><label>Instructions shown before the button (one per line)</label><textarea name="steps" rows="4" placeholder="Leave empty to use the default instructions (WhatsApp group / website)"><?=e(implode("\n",$l['steps']??[]))?></textarea></div>
     <div><label>Icon (1–3 characters, e.g. &lt;/&gt;)</label><input name="icon" maxlength="3" value="<?=e($l['icon']??'')?>"></div>
     <div><label>&nbsp;</label><label style="color:var(--ink)"><input type="checkbox" name="active" style="width:auto" <?=($l['active']??true)?'checked':''?>> Visible on the page</label></div>
   </div>

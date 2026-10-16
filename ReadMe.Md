@@ -1,1 +1,2 @@
-#Building a Funnel for users to select what service group or directory that they need.. 
+# Kortix-Funnel
+This is a Kortix Funnel for kortix digital community

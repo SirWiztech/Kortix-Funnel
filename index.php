@@ -43,12 +43,12 @@ if (isset($_GET['go'])) {
     <div class="t"><span id="n"></span><span class="ic" id="ic"></span></div>
     <div><h2 id="tt"></h2><p id="td"></p></div>
   </div>
-  <ul class="list">
+  <ul class="list" id="steps">
     <li>Tap the button to open the WhatsApp group.</li>
     <li>Tap “Join group” and read the pinned rules.</li>
     <li>Introduce yourself and get ready for the first session.</li>
   </ul>
-  <a class="btn" id="go" href="#">Join the WhatsApp group <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
+  <a class="btn" id="go" href="#"><span id="golabel">Join the WhatsApp group</span> <svg width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a>
   <button class="btn ghost" id="back">Choose a different cohort</button>
 </section>
 
@@ -57,11 +57,19 @@ if (isset($_GET['go'])) {
 </footer>
 </main>
 <script>
-const L = <?=json_encode(array_map(fn($l)=>['id'=>$l['id'],'t'=>$l['title'],'d'=>$l['desc'],'ic'=>$l['icon']],$links),JSON_HEX_TAG|JSON_HEX_AMP)?>;
+const L = <?=json_encode(array_map(fn($l)=>['id'=>$l['id'],'t'=>$l['title'],'d'=>$l['desc'],'ic'=>$l['icon'],'u'=>$l['url'],'cta'=>trim($l['cta'] ?? ''),'st'=>array_values($l['steps'] ?? [])],$links),JSON_HEX_TAG|JSON_HEX_AMP)?>;
+const WA_STEPS=['Tap the button to open the WhatsApp group.','Tap “Join group” and read the pinned rules.','Introduce yourself and get ready for the first session.'];
+const WEB_STEPS=['Tap the button to open the website in your browser.','Explore what '+<?=json_encode(BRAND)?>+' has to offer.','Come back here any time for more links.'];
+const isWA=u=>/^https?:\/\/(chat\.whatsapp\.com|wa\.me)\//i.test(u||'');
 const $=s=>document.querySelector(s), show=n=>{document.querySelectorAll('.step').forEach(x=>x.classList.toggle('on',x.id===n));scrollTo({top:0})};
 document.querySelectorAll('.card').forEach(c=>c.onclick=()=>{
   const i=+c.dataset.i,l=L[i]; $('#n').textContent=String(i+1).padStart(2,'0'); $('#ic').textContent=l.ic;
-  $('#tt').textContent=l.t; $('#td').textContent=l.d; $('#go').href='?go='+encodeURIComponent(l.id); show('s2');
+  $('#tt').textContent=l.t; $('#td').textContent=l.d;
+  const wa=isWA(l.u);
+  $('#golabel').textContent=l.cta||(wa?'Join the WhatsApp group':'Visit Website');
+  const steps=(l.st&&l.st.length)?l.st:(wa?WA_STEPS:WEB_STEPS), ul=$('#steps');
+  ul.textContent=''; steps.forEach(s=>{const li=document.createElement('li'); li.textContent=s; ul.appendChild(li);});
+  $('#go').href='?go='+encodeURIComponent(l.id); show('s2');
 });
 $('#back').onclick=()=>show('s1');
 </script></body></html>
