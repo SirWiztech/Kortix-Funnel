@@ -1,0 +1,42 @@
+[
+    {
+        "id": "frontend",
+        "title": "Frontend Web Development",
+        "tag": "Frontend",
+        "desc": "HTML, CSS, JavaScript and modern frameworks. Build interfaces people enjoy using.",
+        "url": "https://chat.whatsapp.com/DqODmH902UN4xqmyID5Lm1?s=cl&p=a&mlu=4&ilr=4",
+        "icon": "</>",
+        "active": true,
+        "clicks": 0
+    },
+    {
+        "id": "backend",
+        "title": "Backend Development",
+        "tag": "Backend",
+        "desc": "Servers, databases and APIs. Build the logic that powers real products.",
+        "url": "https://chat.whatsapp.com/CA5A0pkg8LXA71R50ij3fS?s=cl&p=a&mlu=4&ilr=4",
+        "icon": "▤",
+        "active": true,
+        "clicks": 0
+    },
+    {
+        "id": "uiux",
+        "title": "UI/UX Design",
+        "tag": "UiUx",
+        "desc": "Research, wireframes and prototypes. Design products that feel obvious to use.",
+        "url": "https://chat.whatsapp.com/L6KCoZRWTgHEtK4XENr83W?s=cl&p=a&mlu=4&ilr=4",
+        "icon": "◩",
+        "active": true,
+        "clicks": 0
+    },
+    {
+        "title": "Official Website",
+        "tag": "Website",
+        "desc": "This is the official website of  Kortix Digital",
+        "url": "https://kortixdigital.com",
+        "icon": "🚀",
+        "active": true,
+        "id": "735bac2b",
+        "clicks": 0
+    }
+]
